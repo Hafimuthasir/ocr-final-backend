@@ -50,13 +50,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     
 
     def validate_id_proof(self, value):
-        if value.size > 1024*1024*2:
+        # print('wwwwwweeeeeeee',value.size)
+        if value.size > 2097152:
             raise serializers.ValidationError("File size should not exceed 2MB.")
         return value
 
 
 
-class DocumentSaveSerializer(serializers.ModelSerializer):
+class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = id_data
         fields = "__all__"
@@ -67,10 +68,10 @@ class DocumentSaveSerializer(serializers.ModelSerializer):
             "id_fulldata": {"required": False},
             "id_type": {"required": False},
         }
-        
+
         
 class DataFetchSerializer(serializers.ModelSerializer):
-    id_data = DocumentSaveSerializer()
+    id_data = DocumentSerializer()
     class Meta :
         model = UserInfo
         fields = "__all__"

@@ -51,6 +51,7 @@ class RegiserView(APIView):
 
         image_file = request.FILES['id_proof']
 
+        # If the file is a PDF, convert it to an image.
         if request.data['id_filetype'] == "pdf":
             if request.data['id_type'] == "passport":
                 return "scanning passport of pdf type is currently not supported"
@@ -61,9 +62,10 @@ class RegiserView(APIView):
         else:
             image_file = Image.open(image_file)
 
+        # Extract text from the image.
         text = pytesseract.image_to_string(image_file)
 
-
+        # Extract data based on the type of document.
         id_type = request.data.get('id_type')
         id_name = ""
         id_no = ""
@@ -82,7 +84,7 @@ class RegiserView(APIView):
         if id_type == "passport":
             id_name, id_no, id_dob = extract_data_from_passport(image_file)
             if id_name == "error":
-                return "Error while scanning passport image.Ensure that uploaded image is a valid passport image"    
+                return "Error while scanning passport image.Ensure that uploaded image is a valid passport image and not bad quality"    
 
         data = {
                 "userid": userid,
@@ -93,7 +95,7 @@ class RegiserView(APIView):
                 "id_type":id_type
                 }
         
-        serializer = DocumentSaveSerializer(data=data,partial=True)
+        serializer = DocumentSerializer(data=data,partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -117,7 +119,7 @@ class FetchDocumentData(APIView):
     """
     def get(self,request,id):
         data = id_data.objects.all()
-        serializer = DocumentSaveSerializer(data,many=True)
+        serializer = DocumentSerializer(data,many=True)
         return Response({"message":serializer.data,"status":True},status=status.HTTP_200_OK)
             
         
@@ -127,7 +129,7 @@ class NameMatchPercentage(APIView):
     """
     API View to get name match percentage with both case and noncase sensitivity
     """
-    
+
     def get(self,request,givenname,id_name):
 
         string1 = givenname

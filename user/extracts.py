@@ -9,18 +9,29 @@ def extract_from_licence(text):
     name = None
     dob = None
 
-    # extract name
+    
     for string in data_list:
         if "Name" in string:
             name_sentance = string
             name = name_sentance.replace("Name", "").strip()
-            name = ''.join(char for char in name if char.isalpha() or char.isspace()).strip()
+            temp_name = ""
+            for char in name:
+                if char.isalpha() or char.isspace():
+                    temp_name += char
+            name = temp_name.strip()
+            if not name :
+                name = "failed to extract"
+                
 
         if "Birth" in string:
+            dob = "failed extract"
             date_regex = r'\d{2}[/\\,-]\d{2}[/\\,-]\d{4}'
             match = re.search(date_regex, string)
             if match:
                 dob = match.group()
+            if not dob :
+                dob = "failed to extract"
+            
     return (name, dob)
 
 

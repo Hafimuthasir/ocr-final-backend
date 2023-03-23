@@ -14,16 +14,13 @@ def pdf_to_image(file):
         for chunk in file.chunks():
             f.write(chunk)
 
-    pdf_file = fitz.open(file_path)
-
     pdf_data = fitz.open(file_path)
 
     pdf_data = fitz.open(file_path)
-    page = pdf_data[0]  # get the specified page
+    page = pdf_data[0]  
     zoom_x = 2.0
     zoom_y = 2.0
     mat = fitz.Matrix(zoom_x, zoom_y)
     pix = page.get_pixmap(matrix=mat)
-    # pix = page.get_pixmap()  #
     return pix
 
