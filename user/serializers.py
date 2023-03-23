@@ -57,7 +57,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class DocumentSaveSerializer(serializers.ModelSerializer):
-    id_name = serializers
     class Meta:
         model = id_data
         fields = "__all__"
@@ -68,6 +67,7 @@ class DocumentSaveSerializer(serializers.ModelSerializer):
             "id_fulldata": {"required": False},
             "id_type": {"required": False},
         }
+        
         
 class DataFetchSerializer(serializers.ModelSerializer):
     id_data = DocumentSaveSerializer()

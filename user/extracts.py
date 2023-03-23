@@ -27,7 +27,6 @@ def extract_from_licence(text):
 def extract_name_from_adhaar(text):
     data_list = text.split('\n')
     name_regex = r"[A-Z][a-z]*\s[A-Z][a-z]*"
-    # name = re.match(name_regex, text)
     name_str = ""
 
     for i in range(0,len(data_list)-1):
@@ -115,6 +114,7 @@ def extract_data_from_passport(image_file):
     except Exception as e:
         print("Error while reading MRZ:", e)
         return "error","error","error"
+    
         # return Response({"message":"failed reading the document. Check the document type","status":False},status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
     
         

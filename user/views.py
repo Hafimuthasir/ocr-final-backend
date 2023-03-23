@@ -19,10 +19,16 @@ from .converter import pdf_to_image
 
 
 class RegiserView(APIView):
-
+    """
+    API View for user registration and id_document extraction and saving.
+    """
+     
     def post(self,request):
-        print(request.data)
+        """
+        saves user provided details and transfer id_document for extraction
+        """
         serializer = UserRegisterSerializer(data=request.data)
+
         if serializer.is_valid():
             user = serializer.save()
             doc_save = self.save_document_data(request,userid=user.id)
@@ -36,8 +42,19 @@ class RegiserView(APIView):
     
 
     def save_document_data(self,request,userid):
+
+        """
+        Method to extract and save data from id_document image or pdf
+
+        :return: True if document data saved successfully, otherwise serializer errors
+        """
+
         image_file = request.FILES['id_proof']
+
         if request.data['id_filetype'] == "pdf":
+            if request.data['id_type'] == "passport":
+                return "scanning passport of pdf type is currently not supported"
+            
             file = pdf_to_image(image_file)
             img = Image.frombytes("RGB", [file.width, file.height], file.samples)  # convert pixmap to PIL Image
             image_file = img
@@ -85,6 +102,9 @@ class RegiserView(APIView):
 
 
 class FetchUsers(APIView):
+    """
+    API View to fetch all users
+    """
     def get(self,request):
         allusers = UserInfo.objects.all()
         serializer = DataFetchSerializer(allusers,many=True)
@@ -92,6 +112,9 @@ class FetchUsers(APIView):
 
 
 class FetchDocumentData(APIView):
+    """
+    API View to fetch data extracted using OCR for specific user
+    """
     def get(self,request,id):
         data = id_data.objects.all()
         serializer = DocumentSaveSerializer(data,many=True)
@@ -101,12 +124,15 @@ class FetchDocumentData(APIView):
         
         
 class NameMatchPercentage(APIView):
+    """
+    API View to get name match percentage with both case and noncase sensitivity
+    """
+    
     def get(self,request,givenname,id_name):
 
         string1 = givenname
         string2 = id_name
         
-
         len1 = len(string1)
         len2 = len(string2)
         count = 0
@@ -124,6 +150,7 @@ class NameMatchPercentage(APIView):
 
         case_percentage = (count / max_len) * 100
 
+
         string1_low = string1.lower()
         string2_low = string2.lower()
 
@@ -139,7 +166,6 @@ class NameMatchPercentage(APIView):
             "noncase_percentage":str(noncase_percentage)
         }
 
- 
         return Response(data)
 
 

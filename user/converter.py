@@ -16,8 +16,6 @@ def pdf_to_image(file):
 
     pdf_file = fitz.open(file_path)
 
-
-
     pdf_data = fitz.open(file_path)
 
     pdf_data = fitz.open(file_path)
@@ -29,17 +27,3 @@ def pdf_to_image(file):
     # pix = page.get_pixmap()  #
     return pix
 
-
-
-
-
-    # pdf = PyMuPDF.PDF(pdf_data)
-
-    # Convert the first page of the PDF to a PIL Image object
-    # page = pdf[0]
-    # image = page.getImage(alpha=False)
-
-    # Convert the PIL Image object to a byte stream
-    # image_bytes = io.BytesIO()
-    # image.save(image_bytes, format='PNG')
-    # image_bytes.seek(0)
